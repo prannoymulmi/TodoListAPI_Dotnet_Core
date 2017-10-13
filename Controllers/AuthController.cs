@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ListsWebAPi.Models;
+using ListsWebAPi.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
@@ -14,12 +15,13 @@ namespace ListsWebAPi.Controllers
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
        
         public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher)
+            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo): base(userJwtInfoRepo)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _passwordHasher = passwordHasher;
+            
         }
         
       

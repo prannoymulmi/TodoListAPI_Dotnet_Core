@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using ListsWebAPi.Interfaces;
 using ListsWebAPi.Models;
+using ListsWebAPi.Repositories;
 using ListsWebAPi.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -19,9 +20,9 @@ namespace ListsWebAPi.Controllers.APIControllers
         private readonly AuthController _authController;
 
         public AuthApiController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher)
+            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo)
         {
-            _authController = new AuthController(userManager, signInManager, roleManager, passwordHasher);
+            _authController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo);
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace ListsWebAPi.Controllers.APIControllers
                 }, "Custom");
                 
                 _authController.setClaims(claimsIdentity);
-                var token = _authController.CreateToken();
+                var token = _authController.CreateToken(user.Id);
                 return new
                 {
                     token
