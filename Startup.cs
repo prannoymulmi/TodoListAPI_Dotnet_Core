@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ListsWebAPi.DbInitalizer;
 using ListsWebAPi.Entity;
 using ListsWebAPi.Models;
+using ListsWebAPi.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +46,7 @@ namespace ListsWebAPi
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            services.AddTransient<IUserJwtInfoRepo, UserJwtInfoRepo>();
             
         }
 

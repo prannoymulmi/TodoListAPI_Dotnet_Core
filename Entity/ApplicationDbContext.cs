@@ -16,6 +16,7 @@ namespace ListsWebAPi.Entity
         public DbSet<ApplicationUser> User { get; set; }
         public DbSet<ListItem> ListItem { get; set; }
         public DbSet<Lists> Lists { get; set; }
+        public DbSet<UserJwtInfo> UserJwtInfos { get; set; }
         
     }
 }

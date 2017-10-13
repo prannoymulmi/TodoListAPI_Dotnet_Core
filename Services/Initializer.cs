@@ -28,7 +28,8 @@ namespace ListsWebAPi.DbInitalizer
                 Email = "prannoy.mulmi@gmail.com"
 
             };
-            
+
+            String URL = "http://www.prannoy.com";
             
             var signUpSucces = _userManager.CreateAsync(identityUser, "$$!5167Pm").Result;
 
@@ -69,6 +70,18 @@ namespace ListsWebAPi.DbInitalizer
                 };
             
                 context.Lists.Add(lists);
+                context.SaveChanges();
+                
+                UserJwtInfo userJwtInfo= new UserJwtInfo
+                {
+                    Id = Guid.NewGuid(),
+                    Issuer = URL,
+                    Audience = URL,
+                    AspNetUserId = id,
+                    UserSecurityKey = Guid.NewGuid()
+                }; 
+                
+                context.UserJwtInfos.Add(userJwtInfo);
                 context.SaveChanges();
             }
             
