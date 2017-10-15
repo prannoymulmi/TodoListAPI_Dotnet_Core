@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ListsWebAPi.Models;
 using ListsWebAPi.Repositories;
+using ListsWebAPi.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
@@ -23,7 +24,25 @@ namespace ListsWebAPi.Controllers
             _passwordHasher = passwordHasher;
             
         }
-        
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// TODO: Set UseerJWTInfos with the new SecurityKey and Id and issuers
+        public async Task<bool> RegisterUser(RegisterViewModel user)
+        {
+            var identityUser = new ApplicationUser
+            {
+                UserName = user.UserName,
+                Email = user.Email
+            };
+           
+            var signUpSucces = await _userManager.CreateAsync(identityUser, user.Password);
+            return signUpSucces.Succeeded;
+
+        }
       
         /// <summary>
         /// Checks if the credentials of a user are valid

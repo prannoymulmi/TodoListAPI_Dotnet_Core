@@ -8,6 +8,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ListsWebAPi.Controllers
 {
+    /// <summary>
+    /// A controller which handles actions with tokens
+    /// </summary>
     public class TokenManagerController: ITokenManagerController
     {
         protected ClaimsIdentity claimsIdentity { get; set; }
@@ -56,7 +59,6 @@ namespace ListsWebAPi.Controllers
             
             return true;
         }
-        
         
 
        /// <summary>

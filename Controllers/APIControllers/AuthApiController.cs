@@ -30,7 +30,7 @@ namespace ListsWebAPi.Controllers.APIControllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        /// TODO: Put appropriate return code for failure
+        /// TODO: Add the token to the WhiteListDb
         [HttpPost("login")]
         public object Login([FromBody] LoginViewModel model)
         {
@@ -43,7 +43,7 @@ namespace ListsWebAPi.Controllers.APIControllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Sid, user.Id),
+                    new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
                 }, "Custom");
                 
                 _authController.setClaims(claimsIdentity);
@@ -53,13 +53,42 @@ namespace ListsWebAPi.Controllers.APIControllers
                     token
                 };
             }
-            
-            return new 
-            {
-                token = "sdasdsad"
-            };
+
+            return Unauthorized();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
+        [HttpPost("register")]
+        public object Register([FromBody]RegisterViewModel newUser)
+        {
+            var isRegistered = _authController.RegisterUser(newUser).Result;
+            if (isRegistered)
+            {
+                var claimsIdentity = new ClaimsIdentity(new List<Claim>()
+                {
+                    new Claim(ClaimTypes.NameIdentifier, newUser.UserName),
+                    new Claim(ClaimTypes.Email, newUser.Email),
+                    new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
+                }, "Custom");
+                
+                _authController.setClaims(claimsIdentity);
+                var user = _authController.GetUserDetailsByEmail(newUser.Email);
+                var token = _authController.CreateToken(user.Id.ToString());
+                return Created("Login Successful", new {token});
+            }
+
+            return BadRequest();
+        }
+        
+        
+        
+        /// <summary>
+        /// TODO: Remove the Token from the WhitelistDb when logginout
+        /// </summary>
         public void Logout()
         {
             
