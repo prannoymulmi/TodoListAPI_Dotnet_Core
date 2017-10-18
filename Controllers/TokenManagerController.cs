@@ -26,13 +26,22 @@ namespace ListsWebAPi.Controllers
        /// This is a Method which creates a JWT Token which will be then used to validate to get the resources from the API
        /// </summary>
        /// <returns></returns>
+       /// TODO: ADD Proper Exception Message
         public string CreateToken(String userId)
         {
             SecurityTokenDescriptor securityTokenDescriptor = CreateSecurityTokenDescriptor(userId);
             
             var tokenHandler = new JwtSecurityTokenHandler();
-            var plainToken = tokenHandler.CreateToken(securityTokenDescriptor);
-            return tokenHandler.WriteToken(plainToken);
+            try
+            {
+                var plainToken = tokenHandler.CreateToken(securityTokenDescriptor);
+                return tokenHandler.WriteToken(plainToken);
+            }
+            catch (Exception)
+            {
+                return "Token Could not be Made";
+            }
+            
         }
 
         /// <summary>
@@ -80,7 +89,7 @@ namespace ListsWebAPi.Controllers
             var signingCredentials = new SigningCredentials(signingKey,
                 SecurityAlgorithms.HmacSha256Signature);
             
-           ///TODO: Create personalized Audience and Security Key usinga DB
+          
             return  new SecurityTokenDescriptor ()
             {
                 Audience = info[0].Audience,

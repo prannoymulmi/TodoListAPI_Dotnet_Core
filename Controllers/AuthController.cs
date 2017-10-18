@@ -14,6 +14,8 @@ namespace ListsWebAPi.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
+        private readonly IUserJwtInfoRepo _userJwtInfoRepo;
+        public ApplicationUser newUser { get; set; }
        
         public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
             , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo): base(userJwtInfoRepo)
@@ -22,7 +24,8 @@ namespace ListsWebAPi.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
             _passwordHasher = passwordHasher;
-            
+            _userJwtInfoRepo = userJwtInfoRepo;
+
         }
 
 
@@ -31,7 +34,7 @@ namespace ListsWebAPi.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// TODO: Set UseerJWTInfos with the new SecurityKey and Id and issuers
-        public async Task<bool> RegisterUser(RegisterViewModel user)
+        public async Task<IdentityResult> RegisterUser(RegisterViewModel user)
         {
             var identityUser = new ApplicationUser
             {
@@ -40,8 +43,20 @@ namespace ListsWebAPi.Controllers
             };
            
             var signUpSucces = await _userManager.CreateAsync(identityUser, user.Password);
-            return signUpSucces.Succeeded;
+            
+            //If Sigin is succeded _usermanager adds all the remaining attribute to identity User
+            if (signUpSucces.Succeeded)
+            {
+                AddNewUserJwtInfo(identityUser);
+                newUser = identityUser;
+            }
+            return signUpSucces;
 
+        }
+
+        public void AddNewUserJwtInfo(ApplicationUser user)
+        {
+            _userJwtInfoRepo.SetUserJwtInfoByUserId(user);
         }
       
         /// <summary>

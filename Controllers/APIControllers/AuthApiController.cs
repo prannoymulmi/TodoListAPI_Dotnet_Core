@@ -58,15 +58,16 @@ namespace ListsWebAPi.Controllers.APIControllers
         }
 
         /// <summary>
-        /// 
+        /// Registers a new User
         /// </summary>
         /// <param name="newUser"></param>
         /// <returns></returns>
+        /// TODO: ADD The token to the WhiteListDb
         [HttpPost("register")]
         public object Register([FromBody]RegisterViewModel newUser)
         {
-            var isRegistered = _authController.RegisterUser(newUser).Result;
-            if (isRegistered)
+            var register = _authController.RegisterUser(newUser).Result;
+            if (register.Succeeded)
             {
                 var claimsIdentity = new ClaimsIdentity(new List<Claim>()
                 {
@@ -76,12 +77,11 @@ namespace ListsWebAPi.Controllers.APIControllers
                 }, "Custom");
                 
                 _authController.setClaims(claimsIdentity);
-                var user = _authController.GetUserDetailsByEmail(newUser.Email);
-                var token = _authController.CreateToken(user.Id.ToString());
+                var token = _authController.CreateToken(_authController.newUser.Id);
                 return Created("Login Successful", new {token});
             }
 
-            return BadRequest();
+            return BadRequest(register.Errors);
         }
         
         

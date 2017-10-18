@@ -83,6 +83,17 @@ namespace ListsWebAPi.DbInitalizer
                 
                 context.UserJwtInfos.Add(userJwtInfo);
                 context.SaveChanges();
+                
+                WhiteListedTokensList whiteListedToken = new WhiteListedTokensList
+                {
+                    Id = Guid.NewGuid(),
+                    Token = "0a531c048fd3baae7ead6700f458e3aea81a693c48e9ad64c7519dce3910f1a2",
+                    TimestampCreated = DateTimeOffset.Now.ToUnixTimeSeconds()
+                };
+
+                context.WhiteListedTokensList.Add(whiteListedToken);
+                context.SaveChanges();
+                
             }
             
         }

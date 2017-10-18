@@ -6,5 +6,6 @@ namespace ListsWebAPi.Repositories
     public interface IUserJwtInfoRepo
     {
         List<UserJwtInfo> GetUserJwtInfos(string userId);
+        void SetUserJwtInfoByUserId(ApplicationUser user);
     }
 }
