@@ -18,7 +18,7 @@ namespace ListsWebAPi.Controllers
         public ApplicationUser newUser { get; set; }
        
         public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo): base(userJwtInfoRepo)
+            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo): base(userJwtInfoRepo, whiteListedTokensRepo)
         {
             _userManager = userManager;
             _signInManager = signInManager;

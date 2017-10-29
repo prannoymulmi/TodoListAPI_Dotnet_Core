@@ -23,7 +23,7 @@ namespace ListsWebAPi.Controllers.APIControllers
         public AuthApiController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
             , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo)
         {
-            _authController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo);
+            _authController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo, whiteListedTokensRepo);
             _whiteListedTokensRepo = whiteListedTokensRepo;
         }
 
@@ -51,7 +51,6 @@ namespace ListsWebAPi.Controllers.APIControllers
                 
                 _authController.setClaims(claimsIdentity);
                 var token = _authController.CreateToken(user.Id);
-                _whiteListedTokensRepo.AddNewToken(token);
                 return new
                 {
                     token
@@ -83,7 +82,6 @@ namespace ListsWebAPi.Controllers.APIControllers
                 
                 _authController.setClaims(claimsIdentity);
                 var token = _authController.CreateToken(_authController.newUser.Id);
-                _whiteListedTokensRepo.AddNewToken(token);
                 return Created("Login Successful", new {token});
             }
 
@@ -99,11 +97,7 @@ namespace ListsWebAPi.Controllers.APIControllers
         [HttpPost("logout")]
         public object Logout([FromBody]LogoutViewModel model)
         {
-           var doesExist = _whiteListedTokensRepo.DoesTokenExist(model.token);
-            if (doesExist)
-            {
-                _whiteListedTokensRepo.DeleteToken(model.token);   
-            }
+            var doesExist = _authController.RemoveToken(model.token);
             return new
             {
                 Sucess = doesExist

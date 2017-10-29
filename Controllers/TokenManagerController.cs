@@ -15,10 +15,12 @@ namespace ListsWebAPi.Controllers
     {
         protected ClaimsIdentity claimsIdentity { get; set; }
         private readonly IUserJwtInfoRepo _userJwtInfoRepo;
+        private readonly IWhiteListedTokensRepo _whiteListedTokensRepo;
 
-        public TokenManagerController(IUserJwtInfoRepo userJwtInfoRepo)
+        public TokenManagerController(IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo)
         {
             _userJwtInfoRepo = userJwtInfoRepo;
+            _whiteListedTokensRepo = whiteListedTokensRepo;
         }
 
         
@@ -35,6 +37,8 @@ namespace ListsWebAPi.Controllers
             try
             {
                 var plainToken = tokenHandler.CreateToken(securityTokenDescriptor);
+                //Adding Token to the database
+                _whiteListedTokensRepo.AddNewToken(tokenHandler.WriteToken(plainToken));
                 return tokenHandler.WriteToken(plainToken);
             }
             catch (Exception)
@@ -44,32 +48,44 @@ namespace ListsWebAPi.Controllers
             
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="token"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="token"></param>
+       /// <param name="userId"></param>
+       /// <returns></returns>
+       /// Add Error Handling to DB
         public bool ValidateToken(string token, String userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenValidationParameters = CreateTokenValidationParameters(userId);
-            
+            var isTokenValid = false;
             try
             {
                 SecurityToken validatedToken;
                 tokenHandler.ValidateToken(token,
                     tokenValidationParameters, out validatedToken);
+                isTokenValid = _whiteListedTokensRepo.DoesTokenExist(token);
             }
             catch(SecurityTokenException)
             {  
-                return false; 
+                return isTokenValid; 
             }
             
-            return true;
+            return isTokenValid;
+        }
+
+
+        public bool RemoveToken(string token)
+        {
+            var doesExist = _whiteListedTokensRepo.DoesTokenExist(token);
+            if (doesExist)
+            {
+                _whiteListedTokensRepo.DeleteToken(token);   
+            }
+            return doesExist;
         }
         
-
        /// <summary>
        /// Creates a Token Descriptor which is needed to create a token
        /// </summary>
