@@ -9,6 +9,6 @@ namespace ListsWebAPi.Interfaces
         string CreateToken(String userId);
         bool ValidateToken(string token, String userId);
         void setClaims(ClaimsIdentity claimsIdentity);
-        bool removeTokens(string token);
+        bool RemoveToken(string token);
     }
 }

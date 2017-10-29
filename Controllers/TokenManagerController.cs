@@ -67,9 +67,13 @@ namespace ListsWebAPi.Controllers
                     tokenValidationParameters, out validatedToken);
                 isTokenValid = _whiteListedTokensRepo.DoesTokenExist(token);
             }
-            catch(SecurityTokenException)
-            {  
-                return isTokenValid; 
+            catch (SecurityTokenException)
+            {
+                return isTokenValid;
+            }
+            catch (ArgumentException)
+            {
+                return isTokenValid;
             }
             
             return isTokenValid;
