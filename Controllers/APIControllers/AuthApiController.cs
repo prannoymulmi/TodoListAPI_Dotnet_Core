@@ -18,11 +18,13 @@ namespace ListsWebAPi.Controllers.APIControllers
     public class AuthApiController : Controller, IAuthController
     {
         private readonly AuthController _authController;
+        private readonly IWhiteListedTokensRepo _whiteListedTokensRepo;
 
         public AuthApiController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo)
+            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo)
         {
             _authController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo);
+            _whiteListedTokensRepo = whiteListedTokensRepo;
         }
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace ListsWebAPi.Controllers.APIControllers
         /// <param name="model"></param>
         /// <returns></returns>
         /// TODO: Add the token to the WhiteListDb
+        /// TODO: ADD Error Handling if adding to DB is not successful
         [HttpPost("login")]
         public object Login([FromBody] LoginViewModel model)
         {
@@ -48,6 +51,7 @@ namespace ListsWebAPi.Controllers.APIControllers
                 
                 _authController.setClaims(claimsIdentity);
                 var token = _authController.CreateToken(user.Id);
+                _whiteListedTokensRepo.AddNewToken(token);
                 return new
                 {
                     token
@@ -63,6 +67,7 @@ namespace ListsWebAPi.Controllers.APIControllers
         /// <param name="newUser"></param>
         /// <returns></returns>
         /// TODO: ADD The token to the WhiteListDb
+        /// TODO: ADD Error Handling if adding to DB is not successful
         [HttpPost("register")]
         public object Register([FromBody]RegisterViewModel newUser)
         {
@@ -78,6 +83,7 @@ namespace ListsWebAPi.Controllers.APIControllers
                 
                 _authController.setClaims(claimsIdentity);
                 var token = _authController.CreateToken(_authController.newUser.Id);
+                _whiteListedTokensRepo.AddNewToken(token);
                 return Created("Login Successful", new {token});
             }
 
@@ -87,11 +93,21 @@ namespace ListsWebAPi.Controllers.APIControllers
         
         
         /// <summary>
-        /// TODO: Remove the Token from the WhitelistDb when logginout
+        /// TODO: Remove the Token from the WhitelistDb when loggin out
+        /// TODO: ADD Error handling if CURD operation not sucessful
         /// </summary>
-        public void Logout()
+        [HttpPost("logout")]
+        public object Logout([FromBody]LogoutViewModel model)
         {
-            
+           var doesExist = _whiteListedTokensRepo.DoesTokenExist(model.token);
+            if (doesExist)
+            {
+                _whiteListedTokensRepo.DeleteToken(model.token);   
+            }
+            return new
+            {
+                Sucess = doesExist
+            };
         }
     }
 }

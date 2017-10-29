@@ -47,6 +47,7 @@ namespace ListsWebAPi
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddTransient<IUserJwtInfoRepo, UserJwtInfoRepo>();
+            services.AddTransient<IWhiteListedTokensRepo, WhiteListedTokensRepo>();
             
         }
 

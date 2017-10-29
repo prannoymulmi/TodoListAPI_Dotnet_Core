@@ -8,6 +8,6 @@ namespace ListsWebAPi.Interfaces
     public interface IAuthController
     {
         object Login([FromBody] LoginViewModel model);
-        void Logout();
+        object Logout([FromBody] LogoutViewModel model);
     }
 }
