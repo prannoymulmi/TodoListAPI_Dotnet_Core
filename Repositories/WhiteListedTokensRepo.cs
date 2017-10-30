@@ -52,8 +52,11 @@ namespace ListsWebAPi.Repositories
         public void DeleteToken(string token)
         {
             var item = _whiteListedTokensRepo.WhiteListedTokensList.Single(x => x.Token == token);
-            var sucess = _whiteListedTokensRepo.WhiteListedTokensList.Remove(item);
-            _whiteListedTokensRepo.SaveChanges();
+            if (item != null)
+            {
+                var sucess = _whiteListedTokensRepo.WhiteListedTokensList.Remove(item);
+                _whiteListedTokensRepo.SaveChanges();
+            }
         }
     }
 }
