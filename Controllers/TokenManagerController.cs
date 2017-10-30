@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using ListsWebAPi.Interfaces;
@@ -55,9 +56,11 @@ namespace ListsWebAPi.Controllers
        /// <param name="userId"></param>
        /// <returns></returns>
        /// Add Error Handling to DB
-        public bool ValidateToken(string token, String userId)
+        public bool ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = tokenHandler.ReadJwtToken(token);
+            var userId = claims.Claims.First(claim => claim.Type == "sub").Value;
             var tokenValidationParameters = CreateTokenValidationParameters(userId);
             var isTokenValid = false;
             try
@@ -69,6 +72,7 @@ namespace ListsWebAPi.Controllers
             }
             catch (SecurityTokenException)
             {
+                _whiteListedTokensRepo.DeleteToken(token);
                 return isTokenValid;
             }
             catch (ArgumentException)
@@ -141,7 +145,7 @@ namespace ListsWebAPi.Controllers
                 ValidAudience = info[0].Audience,
                 ValidIssuer = info[0].Issuer,
                 IssuerSigningKey = signingKey,
-                ValidateLifetime = true
+                ValidateLifetime = false
             };
         }
 

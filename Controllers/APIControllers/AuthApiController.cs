@@ -47,6 +47,7 @@ namespace ListsWebAPi.Controllers.APIControllers
                     new Claim(ClaimTypes.NameIdentifier, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
+                    new Claim("sub", user.Id),
                 }, "Custom");
                 
                 _authController.setClaims(claimsIdentity);
