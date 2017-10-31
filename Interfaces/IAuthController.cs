@@ -13,10 +13,6 @@ namespace ListsWebAPi.Interfaces
         void AddNewUserJwtInfo(ApplicationUser user);
         Task<Boolean> ValidateLoginCedentials(String Email, String Password);
         Task<ApplicationUser> GetUserDetailsByEmail(String Email);
-        string CreateToken(String userId);
-        bool ValidateToken(string token);
-        void setClaims(ClaimsIdentity claimsIdentity);
-        bool RemoveToken(string token);
         ApplicationUser GetApplicationUser();
     }
 }

@@ -52,6 +52,7 @@ namespace ListsWebAPi
             services.AddTransient<IWhiteListedTokensRepo, WhiteListedTokensRepo>();
             //Adding it to services so that DI can be carried out
             services.AddSingleton<IAuthController, AuthController>();
+            services.AddSingleton<ITokenManagerController, TokenManagerController>();
             
         }
 

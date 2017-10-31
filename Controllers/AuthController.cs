@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ListsWebAPi.Controllers
 {
-    public class AuthController: TokenManagerController, IAuthController
+    public class AuthController: IAuthController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         private readonly IUserJwtInfoRepo _userJwtInfoRepo;
         public ApplicationUser newUser { get; set; }
        
-        public AuthController(UserManager<ApplicationUser> userManager, IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo): base(userJwtInfoRepo, whiteListedTokensRepo)
+        public AuthController(UserManager<ApplicationUser> userManager, IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo)
         {
             _userManager = userManager;
             _passwordHasher = passwordHasher;

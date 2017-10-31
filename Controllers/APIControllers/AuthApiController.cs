@@ -18,10 +18,17 @@ namespace ListsWebAPi.Controllers.APIControllers
     public class AuthApiController : Controller, IAuthApiController
     {
         private readonly IAuthController _authController;
-        //Injected IAuthController 
-        public AuthApiController(IAuthController authController)
+        private readonly ITokenManagerController _tokenManagerController;
+        /// <summary>
+        /// Injected IAuthController and ItokenManager using Dependency Injection 
+        /// DI is used so that no dependecies to AuthAPiController is present
+        /// </summary>
+        /// <param name="authController"></param>
+        /// <param name="tokenManagerController"></param>
+        public AuthApiController(IAuthController authController, ITokenManagerController tokenManagerController)
         {
             _authController = authController;
+            _tokenManagerController = tokenManagerController;
 
         }
 
@@ -48,8 +55,8 @@ namespace ListsWebAPi.Controllers.APIControllers
                     new Claim("sub", user.Id),
                 }, "Custom");
                 
-                _authController.setClaims(claimsIdentity);
-                var token = _authController.CreateToken(user.Id);
+                _tokenManagerController.setClaims(claimsIdentity);
+                var token = _tokenManagerController.CreateToken(user.Id);
                 return new
                 {
                     token
@@ -79,8 +86,9 @@ namespace ListsWebAPi.Controllers.APIControllers
                     new Claim(ClaimTypes.Sid, Guid.NewGuid().ToString()),
                 }, "Custom");
                 
-                _authController.setClaims(claimsIdentity);
-                var token = _authController.CreateToken(_authController.GetApplicationUser().Id);
+                _tokenManagerController.setClaims(claimsIdentity);
+                var newUserId = _authController.GetApplicationUser().Id;
+                var token = _tokenManagerController.CreateToken(newUserId);
                 return Created("Login Successful", new {token});
             }
 
@@ -96,7 +104,7 @@ namespace ListsWebAPi.Controllers.APIControllers
         [HttpPost("logout")]
         public object Logout([FromBody]LogoutViewModel model)
         {
-            var doesExist = _authController.RemoveToken(model.token);
+            var doesExist = _tokenManagerController.RemoveToken(model.token);
             return new
             {
                 Sucess = doesExist

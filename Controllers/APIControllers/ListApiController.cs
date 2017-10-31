@@ -1,4 +1,5 @@
-﻿using ListsWebAPi.Models;
+﻿using ListsWebAPi.Interfaces;
+using ListsWebAPi.Models;
 using ListsWebAPi.Repositories;
 using ListsWebAPi.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -15,12 +16,11 @@ namespace ListsWebAPi.Controllers.APIControllers
     [Route("api/v1/lists")]
     public class ListApiController : Controller
     {
-        private readonly TokenManagerController _tokenManagerController;
+        private readonly ITokenManagerController _tokenManagerController;
         
-        public ListApiController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo)
+        public ListApiController(ITokenManagerController tokenManagerController)
         {
-                _tokenManagerController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo, whiteListedTokensRepo);
+                _tokenManagerController = tokenManagerController;
         }
  
         [HttpGet("validate")]
