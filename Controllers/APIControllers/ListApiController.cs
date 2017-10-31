@@ -22,9 +22,9 @@ namespace ListsWebAPi.Controllers.APIControllers
         {
                 _tokenManagerController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo, whiteListedTokensRepo);
         }
-
+ 
         [HttpGet("validate")]
-        public object getList(string token)
+        public object GetList(string token)
         {
             var sucess = _tokenManagerController.ValidateToken(token);
             return new {sucess};

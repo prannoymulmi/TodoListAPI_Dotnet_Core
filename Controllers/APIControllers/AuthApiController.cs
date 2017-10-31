@@ -15,7 +15,7 @@ namespace ListsWebAPi.Controllers.APIControllers
     /// The API controller which is related to Authorization
     /// </summary>
     [Route("api/v1/auth")]
-    public class AuthApiController : Controller, IAuthController
+    public class AuthApiController : Controller, IAuthApiController
     {
         private readonly AuthController _authController;
         private readonly IWhiteListedTokensRepo _whiteListedTokensRepo;
