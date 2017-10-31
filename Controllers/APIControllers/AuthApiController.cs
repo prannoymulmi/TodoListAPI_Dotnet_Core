@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using ListsWebAPi.Interfaces;
-using ListsWebAPi.Models;
-using ListsWebAPi.Repositories;
 using ListsWebAPi.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ListsWebAPi.Controllers.APIControllers

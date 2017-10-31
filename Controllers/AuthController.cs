@@ -5,7 +5,6 @@ using ListsWebAPi.Models;
 using ListsWebAPi.Repositories;
 using ListsWebAPi.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ListsWebAPi.Controllers
 {
