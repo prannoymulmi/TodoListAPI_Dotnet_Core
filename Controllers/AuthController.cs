@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ListsWebAPi.Interfaces;
 using ListsWebAPi.Models;
 using ListsWebAPi.Repositories;
 using ListsWebAPi.ViewModels;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ListsWebAPi.Controllers
 {
-    public class AuthController: TokenManagerController
+    public class AuthController: TokenManagerController, IAuthController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -82,6 +83,11 @@ namespace ListsWebAPi.Controllers
             return false;
         }
 
+        public ApplicationUser GetApplicationUser()
+        {
+            return newUser;
+        }
+        
         public async Task<ApplicationUser> GetUserDetailsByEmail(String Email)
         {
             var user = await _userManager.FindByEmailAsync(Email);

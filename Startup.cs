@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ListsWebAPi.Controllers;
 using ListsWebAPi.DbInitalizer;
 using ListsWebAPi.Entity;
+using ListsWebAPi.Interfaces;
 using ListsWebAPi.Models;
 using ListsWebAPi.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +50,8 @@ namespace ListsWebAPi
                 .AddDefaultTokenProviders();
             services.AddTransient<IUserJwtInfoRepo, UserJwtInfoRepo>();
             services.AddTransient<IWhiteListedTokensRepo, WhiteListedTokensRepo>();
+            //Adding it to services so that DI can be carried out
+            services.AddSingleton<IAuthController, AuthController>();
             
         }
 

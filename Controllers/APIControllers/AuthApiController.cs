@@ -17,14 +17,12 @@ namespace ListsWebAPi.Controllers.APIControllers
     [Route("api/v1/auth")]
     public class AuthApiController : Controller, IAuthApiController
     {
-        private readonly AuthController _authController;
-        private readonly IWhiteListedTokensRepo _whiteListedTokensRepo;
-
-        public AuthApiController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo)
+        private readonly IAuthController _authController;
+        //Injected IAuthController 
+        public AuthApiController(IAuthController authController)
         {
-            _authController = new AuthController(userManager, signInManager, roleManager, passwordHasher, userJwtInfoRepo, whiteListedTokensRepo);
-            _whiteListedTokensRepo = whiteListedTokensRepo;
+            _authController = authController;
+
         }
 
         /// <summary>
@@ -82,7 +80,7 @@ namespace ListsWebAPi.Controllers.APIControllers
                 }, "Custom");
                 
                 _authController.setClaims(claimsIdentity);
-                var token = _authController.CreateToken(_authController.newUser.Id);
+                var token = _authController.CreateToken(_authController.GetApplicationUser().Id);
                 return Created("Login Successful", new {token});
             }
 
