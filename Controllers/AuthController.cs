@@ -12,18 +12,13 @@ namespace ListsWebAPi.Controllers
     public class AuthController: TokenManagerController, IAuthController
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
         private readonly IUserJwtInfoRepo _userJwtInfoRepo;
         public ApplicationUser newUser { get; set; }
        
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager
-            , IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo): base(userJwtInfoRepo, whiteListedTokensRepo)
+        public AuthController(UserManager<ApplicationUser> userManager, IPasswordHasher<ApplicationUser> passwordHasher, IUserJwtInfoRepo userJwtInfoRepo, IWhiteListedTokensRepo whiteListedTokensRepo): base(userJwtInfoRepo, whiteListedTokensRepo)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
             _passwordHasher = passwordHasher;
             _userJwtInfoRepo = userJwtInfoRepo;
 
