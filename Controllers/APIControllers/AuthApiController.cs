@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ListsWebAPi.Controllers.APIControllers
 {
     /// <summary>
-    /// The API controller which is related to Authorization
+    /// The API controller which contains the endpoints concerned with authorization of a user
     /// </summary>
     [Route("api/v1/auth")]
     public class AuthApiController : Controller, IAuthApiController

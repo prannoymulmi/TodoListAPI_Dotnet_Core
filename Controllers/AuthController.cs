@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ListsWebAPi.Controllers
 {
+    /// <summary>
+    /// This class is responsible for validating login, registering a user data with the framework ASP.netcore.Identity 
+    /// </summary>
     public class AuthController: IAuthController
     {
         private readonly UserManager<ApplicationUser> _userManager;
